@@ -256,12 +256,18 @@ public class PratoSearch extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "O prato foi eliminado com sucesso!");
                 } catch (SQLException ex) {
                     Logger.getLogger(PratoSearch.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this, "ERRO!\nO prato não foi eliminado.");
+                    JOptionPane.showMessageDialog(this,
+                                            "O prato não foi eliminado!",
+                                            "Erro na eliminação",
+                                            JOptionPane.ERROR_MESSAGE);
                 }
                 searchBtn.doClick();
             }
         } else {
-            JOptionPane.showMessageDialog(this, "É necessario selecionar um prato para o eliminar!");
+            JOptionPane.showMessageDialog(this,
+                                            "É necessario selecionar um prato para o eliminar!",
+                                            "Informação",
+                                            JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_eliminarPratoActionPerformed
 

@@ -14,17 +14,9 @@ public class Contract {
     public static final String KEYVALUEDB = "NutriDB_KeyValue";
     //tables
     public static final String KEYVALUETable= "Prato_Img";
-    /* DB Graph */
-    public static final String GRAPHDB = "NutriDB_Graph";
-    //tables
-    public static final String GRAPHTable = "Prato_Alimentos";
     /* DB Relacional */
     public static final String RELACIONALDB = "NutriDB_Relational";
     //tables
     public static final String PratoTable = "Pratos";
     public static final String AlimentoTable = "Alimentos";
-    /* DB Documents*/
-    public static final String DOCUMENTDB = "NutriDB_Docs";
-    //tables
-    public static final String DOCUMENTTable = "Prato_Doc";
 }

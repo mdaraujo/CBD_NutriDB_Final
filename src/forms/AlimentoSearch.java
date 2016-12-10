@@ -400,12 +400,18 @@ public class AlimentoSearch extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "O alimento foi eliminado com sucesso!");
                 } catch (SQLException ex) {
                     System.out.print(ex);
-                    JOptionPane.showMessageDialog(this, "ERRO!\nO alimento não foi eliminado!");
+                    JOptionPane.showMessageDialog(this,
+                                            "O alimento não foi eliminado!",
+                                            "Erro na eliminação",
+                                            JOptionPane.ERROR_MESSAGE);
                 }
                 searchBtn.doClick();
             }
         } else {
-            JOptionPane.showMessageDialog(this, "É necessario selecionar um alimento para o eliminar!");
+            JOptionPane.showMessageDialog(this,
+                                            "É necessario selecionar um alimento para o eliminar!",
+                                            "Informação",
+                                            JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_deleteBtnActionPerformed

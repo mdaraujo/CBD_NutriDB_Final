@@ -29,6 +29,10 @@ public class PratoCreate extends javax.swing.JFrame {
         setTitle("Detalhes do Prato");
         this.setLocationRelativeTo(null);
         imgPath = "";
+        preparacaoInput.setLineWrap(true);
+        preparacaoInput.setWrapStyleWord(true);
+        descricaoInput.setLineWrap(true);
+        descricaoInput.setWrapStyleWord(true);
     }
 
     /**
@@ -259,12 +263,18 @@ public class PratoCreate extends javax.swing.JFrame {
             
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "ERRO.\nO prato não foi criado.");
+            JOptionPane.showMessageDialog(this,
+                                            "O prato não foi criado!",
+                                            "Erro na criação",
+                                            JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void ingredientesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingredientesBtnActionPerformed
-         JOptionPane.showMessageDialog(this, "É necessário criar o prato, só depois poderá inserir ingredientes!");
+        JOptionPane.showMessageDialog(this,
+                                            "É necessário criar o prato, só depois poderá inserir ingredientes!",
+                                            "Informação",
+                                            JOptionPane.WARNING_MESSAGE); 
     }//GEN-LAST:event_ingredientesBtnActionPerformed
 
     /**

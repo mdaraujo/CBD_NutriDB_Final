@@ -32,7 +32,11 @@ public class PratoEdit extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
 
         this.idPrato = id;
-
+        preparacaoInput.setLineWrap(true);
+        preparacaoInput.setWrapStyleWord(true);
+        descricaoInput.setLineWrap(true);
+        descricaoInput.setWrapStyleWord(true);
+        
         fillInputs();
         disableInputs();
     }
@@ -352,7 +356,10 @@ public class PratoEdit extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "O prato foi alterado com sucesso!");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "ERRO.\nO prato não foi alterado.");
+            JOptionPane.showMessageDialog(this,
+                                            "O prato não foi alterado!",
+                                            "Erro na eliminação",
+                                            JOptionPane.ERROR_MESSAGE);
         }
 
         fillInputs();

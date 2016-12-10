@@ -262,7 +262,10 @@ public class AlimentoEdit extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.out.println(ex);
             fillInputs();
-            JOptionPane.showMessageDialog(this, "ERRO.\nO alimento não foi alterado.");
+            JOptionPane.showMessageDialog(this,
+                                            "O alimento não foi alterado!",
+                                            "Erro na atualização",
+                                            JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -271,7 +274,10 @@ public class AlimentoEdit extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "O alimento foi alterado com sucesso!");
         } catch (SQLException ex) {
             System.out.println(ex);
-            JOptionPane.showMessageDialog(this, "ERRO.\nO alimento não foi alterado!");
+            JOptionPane.showMessageDialog(this,
+                                            "O alimento não foi alterado!",
+                                            "Erro na atualização",
+                                            JOptionPane.ERROR_MESSAGE);
         }
         fillInputs();
         setTitle("Detalhes do alimento");

@@ -249,7 +249,10 @@ public class AlimentoCreate extends javax.swing.JFrame {
         if (added)
             JOptionPane.showMessageDialog(this, "Alimento criado com sucesso!");
         else
-            JOptionPane.showMessageDialog(this, "ERRO!\nO alimento não for criado!");
+            JOptionPane.showMessageDialog(this,
+                                            "O alimento não foi criado!",
+                                            "Erro na criação",
+                                            JOptionPane.ERROR_MESSAGE);
         setVisible(false);
         dispose();
     }//GEN-LAST:event_saveBtnActionPerformed

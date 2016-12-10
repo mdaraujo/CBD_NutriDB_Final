@@ -231,7 +231,10 @@ public class IngredientesInsert extends javax.swing.JFrame {
     private void addIIngredienteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIIngredienteBtnActionPerformed
 
         if (idSelectedInSearch == -1) {
-            JOptionPane.showMessageDialog(this, "É necessario selecionar um alimento para o poder adicionar há lista de ingredientes!");
+            JOptionPane.showMessageDialog(this,
+                                            "É necessario selecionar um alimento para o poder adicionar há lista de ingredientes!",
+                                            "Informação",
+                                            JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -242,7 +245,10 @@ public class IngredientesInsert extends javax.swing.JFrame {
             try {
                 qtd = Double.valueOf(qtdInput.getText());
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "É necessario inserir um valor numérico válido para a quantidade!");
+                JOptionPane.showMessageDialog(this,
+                                            "É necessario inserir um valor numérico válido para a quantidade!",
+                                            "Informação",
+                                            JOptionPane.WARNING_MESSAGE);
                 System.out.println(ex.getMessage());
                 return;
             }
@@ -268,9 +274,11 @@ public class IngredientesInsert extends javax.swing.JFrame {
     }//GEN-LAST:event_addIIngredienteBtnActionPerformed
 
     private void removeIngBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeIngBtnActionPerformed
-
         if (idSelectedInReceita == -1) {
-            JOptionPane.showMessageDialog(this, "É necessario selecionar um ingrediente para o poder remover da receita!");
+            JOptionPane.showMessageDialog(this,
+                                            "É necessario selecionar um ingrediente para o poder remover da receita!",
+                                            "Informação",
+                                            JOptionPane.WARNING_MESSAGE);
             return;
         }
 
