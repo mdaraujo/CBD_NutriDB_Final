@@ -5,12 +5,14 @@
  */
 package databases;
 
+import entities.Ingrediente;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -25,6 +27,31 @@ public class GraphDB {
     private static final String DB_USER = "neo4j";
     private static final String DB_PASSWORD = "qwer";
 
+    
+    public static List<Ingrediente> getListIngContidosEmPrato(int idPrato) throws SQLException {
+        List<Ingrediente> ingredientes = new ArrayList<>();
+
+        try (Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD)) {
+            String query = "MATCH (p:Prato {id: {1} })-[CONTEM]->(a:Alimento) RETURN a.id, CONTEM";
+            try (PreparedStatement stmt = con.prepareStatement(query)) {
+
+                stmt.setInt(1, idPrato);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("a.id");
+                        HashMap contem = (HashMap) rs.getObject("CONTEM");
+                        double qtd = (double) contem.get("qtd");
+                        String unidade = (String) contem.get("uni");
+                        Ingrediente ing = new Ingrediente(id, qtd, unidade);
+
+                        ingredientes.add(ing);
+                    }
+                }
+            }
+        }
+        return ingredientes;
+    }
+    
     public static DefaultListModel getPratosPorAlimentos(List<Integer> idAlimentos) throws SQLException {
         DefaultListModel listModel = new DefaultListModel();
 
@@ -75,7 +102,6 @@ public class GraphDB {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        int id = rs.getInt("a.id");
                         String nome = rs.getString("a.nome");
 
                         HashMap contem = (HashMap) rs.getObject("CONTEM");
