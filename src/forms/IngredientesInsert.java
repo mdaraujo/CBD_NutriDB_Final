@@ -226,15 +226,19 @@ public class IngredientesInsert extends javax.swing.JFrame {
             System.out.println(ex.getMessage());
         }
 
+        if (evt.getClickCount() == 2) {
+            AlimentoEdit editForm = new AlimentoEdit(idSelectedInSearch);
+            editForm.setVisible(true);
+        }
     }//GEN-LAST:event_alimentosListMouseClicked
 
     private void addIIngredienteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIIngredienteBtnActionPerformed
 
         if (idSelectedInSearch == -1) {
             JOptionPane.showMessageDialog(this,
-                                            "É necessario selecionar um alimento para o poder adicionar há lista de ingredientes!",
-                                            "Informação",
-                                            JOptionPane.WARNING_MESSAGE);
+                    "É necessario selecionar um alimento para o poder adicionar há lista de ingredientes!",
+                    "Informação",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -246,9 +250,9 @@ public class IngredientesInsert extends javax.swing.JFrame {
                 qtd = Double.valueOf(qtdInput.getText());
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this,
-                                            "É necessario inserir um valor numérico válido para a quantidade!",
-                                            "Informação",
-                                            JOptionPane.WARNING_MESSAGE);
+                        "É necessario inserir um valor numérico válido para a quantidade!",
+                        "Informação",
+                        JOptionPane.WARNING_MESSAGE);
                 System.out.println(ex.getMessage());
                 return;
             }
@@ -276,9 +280,9 @@ public class IngredientesInsert extends javax.swing.JFrame {
     private void removeIngBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeIngBtnActionPerformed
         if (idSelectedInReceita == -1) {
             JOptionPane.showMessageDialog(this,
-                                            "É necessario selecionar um ingrediente para o poder remover da receita!",
-                                            "Informação",
-                                            JOptionPane.WARNING_MESSAGE);
+                    "É necessario selecionar um ingrediente para o poder remover da receita!",
+                    "Informação",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -298,9 +302,9 @@ public class IngredientesInsert extends javax.swing.JFrame {
         if (receitaLinha == null) {
             return;
         }
-        String[] parts = receitaLinha.split("\\d");
-        String nome = parts[0];
 
+        String[] parts = receitaLinha.split("\\d");
+        String nome = parts[0].replace("q.b", "").trim();
         try {
             idSelectedInReceita = RelationalDB.getAlimentoID(nome);
             //System.out.println(idSelectedInReceita + " " + nome);
@@ -308,17 +312,19 @@ public class IngredientesInsert extends javax.swing.JFrame {
             System.out.println(ex.getMessage());
         }
 
+        if (evt.getClickCount() == 2) {
+            AlimentoEdit editForm = new AlimentoEdit(idSelectedInReceita);
+            editForm.setVisible(true);
+        }
     }//GEN-LAST:event_receitaListMouseClicked
 
     private void unidadeInputItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_unidadeInputItemStateChanged
-          if (unidadeInput.getSelectedItem().toString().equals("q.b")) {
-              qtdInput.setText("");
-              qtdInput.setEnabled(false);
-          }
-          else if (!qtdInput.isEnabled())
-          {
-              qtdInput.setEnabled(true);
-          }
+        if (unidadeInput.getSelectedItem().toString().equals("q.b")) {
+            qtdInput.setText("");
+            qtdInput.setEnabled(false);
+        } else if (!qtdInput.isEnabled()) {
+            qtdInput.setEnabled(true);
+        }
     }//GEN-LAST:event_unidadeInputItemStateChanged
 
     private void fillReceitaList() {

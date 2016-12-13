@@ -5,12 +5,14 @@
  */
 package databases;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.DefaultListModel;
 
 /**
@@ -22,6 +24,32 @@ public class GraphDB {
     private static final String DB_CONNECTION = "jdbc:neo4j:http://localhost:7474";
     private static final String DB_USER = "neo4j";
     private static final String DB_PASSWORD = "qwer";
+
+    public static DefaultListModel getPratosPorAlimentos(List<Integer> idAlimentos) throws SQLException {
+        DefaultListModel listModel = new DefaultListModel();
+
+        try (Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD)) {
+
+            String query = "MATCH (p:Prato)-[:CONTEM]->(a:Alimento) WHERE a.id IN [";
+
+            for (Integer idAlimento : idAlimentos) {
+                query += idAlimento + ", ";
+            }
+            query = query.substring(0, query.length() - 2); // delete last ", "
+            query += "] RETURN DISTINCT p.nome";
+            try (PreparedStatement stmt = con.prepareStatement(query)) {
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        String nome = rs.getString("p.nome");
+
+                        listModel.addElement(nome);
+                    }
+                }
+            }
+        }
+        return listModel;
+    }
 
     public static void deleteCONTEMRelation(int idPrato, int idAlimento) throws SQLException {
         try (Connection con = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD)) {
@@ -54,10 +82,11 @@ public class GraphDB {
                         double qtd = (double) contem.get("qtd");
                         String unidade = (String) contem.get("uni");
 
-                        if (qtd == 0)
+                        if (qtd == 0) {
                             listModel.addElement(String.format("%-40s %s", nome, unidade));
-                        else
+                        } else {
                             listModel.addElement(String.format("%-40s %.2f %s", nome, qtd, unidade));
+                        }
                     }
                 }
             }

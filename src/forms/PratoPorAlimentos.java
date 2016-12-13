@@ -5,10 +5,16 @@
  */
 package forms;
 
+import databases.GraphDB;
 import databases.RelationalDB;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,14 +22,20 @@ import javax.swing.JFrame;
  */
 public class PratoPorAlimentos extends javax.swing.JFrame {
 
-    /**
-     * Creates new form PratoPorAlimentos
-     */
+    String selectedInSearch;
+    String selectedInAddedList;
+    DefaultListModel ingList;
+
     public PratoPorAlimentos() {
         initComponents();
         this.setTitle("Procurar Pratos por Alimentos");
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        selectedInSearch = null;
+        ingList = new DefaultListModel();
+        addedIngList.setModel(ingList);
+        searchBtn.doClick();
     }
 
     /**
@@ -39,15 +51,17 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
         nomeIngInput = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        listPesquisa = new javax.swing.JList<>();
+        searchList = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        listIngredientesAdicionados = new javax.swing.JList<>();
+        addedIngList = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listPratosEncontrados = new javax.swing.JList<>();
+        pratosFoundList = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         resetBtn = new javax.swing.JButton();
+        addIngBtn = new javax.swing.JButton();
+        removeIngBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,13 +72,28 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Ingrediente");
+        jLabel1.setText("Alimento");
 
-        jScrollPane1.setViewportView(listPesquisa);
+        searchList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchListMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(searchList);
 
-        jScrollPane2.setViewportView(listIngredientesAdicionados);
+        addedIngList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addedIngListMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(addedIngList);
 
-        jScrollPane3.setViewportView(listPratosEncontrados);
+        pratosFoundList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pratosFoundListMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(pratosFoundList);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
         jLabel2.setText(">");
@@ -73,7 +102,26 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
 
         jLabel4.setText("Pratos");
 
-        resetBtn.setText("Apagar Pesquisa");
+        resetBtn.setText("Reset");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
+            }
+        });
+
+        addIngBtn.setText("->");
+        addIngBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addIngBtnActionPerformed(evt);
+            }
+        });
+
+        removeIngBtn.setText("<-");
+        removeIngBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeIngBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -83,31 +131,31 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(nomeIngInput))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(resetBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addIngBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removeIngBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(searchBtn)
-                        .addGap(117, 117, 117)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 250, Short.MAX_VALUE)
-                        .addComponent(jLabel4)
-                        .addGap(105, 105, 105))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(121, 121, 121)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(resetBtn)
-                .addContainerGap())
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addGap(132, 132, 132))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,16 +167,23 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
-                .addGap(18, 18, 18)
-                .addComponent(resetBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(130, 130, 130)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(112, 112, 112)
+                        .addComponent(addIngBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeIngBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
+                        .addComponent(resetBtn)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -136,13 +191,128 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-       try {
+        try {
             DefaultListModel listModel = RelationalDB.getAlimentosByName(nomeIngInput.getText());
-            listPesquisa.setModel(listModel);
+            searchList.setModel(listModel);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }//GEN-LAST:event_searchBtnActionPerformed
+
+    private void searchListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchListMouseClicked
+        selectedInSearch = searchList.getSelectedValue();
+
+        if (selectedInSearch == null) {
+            return;
+        }
+
+        if (evt.getClickCount() == 2) {
+            try {
+                int id = RelationalDB.getAlimentoID(selectedInSearch);
+                AlimentoEdit editForm = new AlimentoEdit(id);
+                editForm.setVisible(true);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_searchListMouseClicked
+
+    private void addIngBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIngBtnActionPerformed
+        if (selectedInSearch == null) {
+            JOptionPane.showMessageDialog(this,
+                    "É necessario selecionar um alimento para o poder adicionar há lista de ingredientes!",
+                    "Informação",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!ingList.contains(selectedInSearch)) {
+            ingList.addElement(selectedInSearch);
+            fillPratosList();
+        }
+    }//GEN-LAST:event_addIngBtnActionPerformed
+
+    private void removeIngBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeIngBtnActionPerformed
+        if (selectedInAddedList == null) {
+            JOptionPane.showMessageDialog(this,
+                    "É necessario selecionar um ingrediente para o poder remover da lista de ingredientes!",
+                    "Informação",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ingList.removeElement(selectedInAddedList);
+        fillPratosList();
+    }//GEN-LAST:event_removeIngBtnActionPerformed
+
+    private void addedIngListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addedIngListMouseClicked
+        selectedInAddedList = addedIngList.getSelectedValue();
+
+        if (selectedInAddedList == null) {
+            return;
+        }
+
+        if (evt.getClickCount() == 2) {
+            try {
+                int id = RelationalDB.getAlimentoID(selectedInAddedList);
+                AlimentoEdit editForm = new AlimentoEdit(id);
+                editForm.setVisible(true);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_addedIngListMouseClicked
+
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        nomeIngInput.setText("");
+        selectedInSearch = null;
+        ingList = new DefaultListModel();
+        addedIngList.setModel(ingList);
+        pratosFoundList.setModel(new DefaultListModel());
+        searchBtn.doClick();
+    }//GEN-LAST:event_resetBtnActionPerformed
+
+    private void pratosFoundListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pratosFoundListMouseClicked
+        String pratoSelected = pratosFoundList.getSelectedValue();
+
+        if (pratoSelected == null) {
+            return;
+        }
+
+        if (evt.getClickCount() == 2) {
+            try {
+                int id = RelationalDB.getPratoID(pratoSelected);
+                PratoEdit editForm = new PratoEdit(id);
+                editForm.setVisible(true);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_pratosFoundListMouseClicked
+
+    private void fillPratosList() {
+        if (ingList.getSize() == 0) {
+            return;
+        }
+
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < ingList.getSize(); i++) {
+            String nome = ingList.getElementAt(i).toString();
+            try {
+                int id = RelationalDB.getAlimentoID(nome);
+                ids.add(id);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+
+        try {
+            DefaultListModel listModel = GraphDB.getPratosPorAlimentos(ids);
+            pratosFoundList.setModel(listModel);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -181,6 +351,8 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addIngBtn;
+    private javax.swing.JList<String> addedIngList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -188,11 +360,11 @@ public class PratoPorAlimentos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JList<String> listIngredientesAdicionados;
-    private javax.swing.JList<String> listPesquisa;
-    private javax.swing.JList<String> listPratosEncontrados;
     private javax.swing.JTextField nomeIngInput;
+    private javax.swing.JList<String> pratosFoundList;
+    private javax.swing.JButton removeIngBtn;
     private javax.swing.JButton resetBtn;
     private javax.swing.JButton searchBtn;
+    private javax.swing.JList<String> searchList;
     // End of variables declaration//GEN-END:variables
 }
