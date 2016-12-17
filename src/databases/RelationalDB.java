@@ -6,7 +6,9 @@
 package databases;
 
 import entities.Alimento;
+import entities.Ingrediente;
 import entities.Prato;
+import entities.PratoNutriInfo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,8 +30,40 @@ public class RelationalDB {
     private static final String DB_USER = "sa";
     private static final String DB_PASSWORD = "qwer";
 
-    public static int getAlimentoID(String nome) throws SQLException {
+    public static int getGramasByUnidade(String unidade) throws SQLException {
+        int gramas = 0;
+        try (Connection dbConnection = getDBConnection()) {
+            String query = "SELECT gramas FROM UnidadesEmGramas WHERE unidade=?";
+            try (PreparedStatement st = dbConnection.prepareStatement(query)) {
+                st.setString(1, unidade);
+                try (ResultSet rs = st.executeQuery()) {
+                    if (rs.next()) {
+                        gramas = rs.getInt("gramas");
+                    }
+                }
+            }
+        }
+        return gramas;
+    }
 
+    public static PratoNutriInfo getPratoNutriInfo(List<Ingrediente> ingredientes) throws SQLException {
+        PratoNutriInfo pratoInfo = new PratoNutriInfo();
+
+        for (Ingrediente ing : ingredientes) {
+            Alimento alimento = getAlimento(ing.getId());
+            int gramas = getGramasByUnidade(ing.getUnidade());
+
+            pratoInfo.addEnergia(alimento.getEnergia() * gramas / 100);
+            pratoInfo.addProteina(alimento.getProteina() * gramas / 100);
+            pratoInfo.addLipidos(alimento.getLipidos()* gramas / 100);
+            pratoInfo.addColestrol(alimento.getColestrol()* gramas / 100);
+            pratoInfo.addHidratos(alimento.getHidratos()* gramas / 100);
+            pratoInfo.addFibra(alimento.getFibra()* gramas / 100);
+        }
+        return pratoInfo;
+    }
+
+    public static int getAlimentoID(String nome) throws SQLException {
         int id = -1;
         try (Connection dbConnection = getDBConnection()) {
             String query = "SELECT ID FROM " + Contract.AlimentoTable + " WHERE Nome=?";
@@ -44,7 +78,7 @@ public class RelationalDB {
         }
         return id;
     }
-    
+
     public static DefaultListModel getAlimentosByName(String name) throws SQLException {
         DefaultListModel listModel = new DefaultListModel();
 
@@ -62,7 +96,7 @@ public class RelationalDB {
         }
         return listModel;
     }
-    
+
     public static int getPratoID(String pratoNome) throws SQLException {
 
         int id = -1;
