@@ -15,6 +15,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -77,6 +79,11 @@ public class PratoEdit extends javax.swing.JFrame {
         editImgLabel.setVisible(false);
         imgDirectoryLabel.setVisible(false);
         searchImgBtn.setVisible(false);
+        ((DefaultEditor) dosesInput.getEditor()).getTextField().setEditable(false);
+        dosesInput.setEnabled(false);
+        SpinnerNumberModel snm = (SpinnerNumberModel) dosesInput.getModel();
+        snm.setMaximum((Integer) dosesInput.getValue());
+        snm.setMinimum((Integer) dosesInput.getValue());
     }
 
     private void enableInputs() {
@@ -94,6 +101,11 @@ public class PratoEdit extends javax.swing.JFrame {
         searchImgBtn.setVisible(true);
         imgDirectoryLabel.setText("Sem alterações");
         imgPath = "";
+        ((DefaultEditor) dosesInput.getEditor()).getTextField().setEditable(true);
+        dosesInput.setEnabled(true);
+        SpinnerNumberModel snm = (SpinnerNumberModel) dosesInput.getModel();
+        snm.setMaximum(Integer.MAX_VALUE);
+        snm.setMinimum(0);
     }
 
     public PratoEdit() {
@@ -133,6 +145,7 @@ public class PratoEdit extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         preparacaoInput = new javax.swing.JTextArea();
         cancelBtn = new javax.swing.JButton();
+        tabelaNutricionalBTN = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -209,6 +222,13 @@ public class PratoEdit extends javax.swing.JFrame {
             }
         });
 
+        tabelaNutricionalBTN.setText("Tabela Nutricional");
+        tabelaNutricionalBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tabelaNutricionalBTNActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -247,9 +267,8 @@ public class PratoEdit extends javax.swing.JFrame {
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(cozinhaInput, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addComponent(ingredientesBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(jLabel5)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -262,7 +281,11 @@ public class PratoEdit extends javax.swing.JFrame {
                                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(tempoInput, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(imgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(imgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(ingredientesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(tabelaNutricionalBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                     .addGap(0, 0, Short.MAX_VALUE))))))
                 .addGap(23, 23, 23))
         );
@@ -291,7 +314,9 @@ public class PratoEdit extends javax.swing.JFrame {
                             .addComponent(tempoInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
                         .addGap(18, 18, 18)
-                        .addComponent(ingredientesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ingredientesBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                            .addComponent(tabelaNutricionalBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
@@ -372,6 +397,11 @@ public class PratoEdit extends javax.swing.JFrame {
         ingredientesForm.setVisible(true);
     }//GEN-LAST:event_ingredientesBtnActionPerformed
 
+    private void tabelaNutricionalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tabelaNutricionalBTNActionPerformed
+        TabelaNutricional tabelaNutricionalForm = new TabelaNutricional(idPrato);
+        tabelaNutricionalForm.setVisible(true);
+    }//GEN-LAST:event_tabelaNutricionalBTNActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -431,6 +461,7 @@ public class PratoEdit extends javax.swing.JFrame {
     private javax.swing.JTextArea preparacaoInput;
     private javax.swing.JButton saveBtn;
     private javax.swing.JButton searchImgBtn;
+    private javax.swing.JButton tabelaNutricionalBTN;
     private javax.swing.JComboBox<String> tempoInput;
     private javax.swing.JTextField tituloInput;
     // End of variables declaration//GEN-END:variables
