@@ -12,6 +12,7 @@ import entities.Ingrediente;
 import entities.Prato;
 import entities.PratoNutriInfo;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.table.JTableHeader;
@@ -40,7 +41,7 @@ public class TabelaNutricional extends javax.swing.JFrame {
         this();
         this.idPrato = idPrato;
         header = tabelaNutricional.getTableHeader();
-        column = header.getColumnModel().getColumn(1);
+        column = header.getColumnModel().getColumn(2);
         initializeVaribles();
     }
     
@@ -59,12 +60,21 @@ public class TabelaNutricional extends javax.swing.JFrame {
             List<Ingrediente> listaDeIng = GraphDB.getListIngContidosEmPrato(idPrato);
             PratoNutriInfo pratoInfo = RelationalDB.getPratoNutriInfo(listaDeIng);
             
-            tabelaNutricional.setValueAt(pratoInfo.getEnergia(), 0, 1);
-            tabelaNutricional.setValueAt(pratoInfo.getProteina(), 1, 1);
-            tabelaNutricional.setValueAt(pratoInfo.getLipidos(), 2, 1);
-            tabelaNutricional.setValueAt(pratoInfo.getColestrol(), 3, 1);
-            tabelaNutricional.setValueAt(pratoInfo.getHidratos(), 4, 1);
-            tabelaNutricional.setValueAt(pratoInfo.getFibra(), 5, 1);
+            DecimalFormat df = new DecimalFormat("#.###");
+            
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getEnergia()/pratoDoc.getDoses()), 0, 1);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getProteina()/pratoDoc.getDoses()), 1, 1);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getLipidos()/pratoDoc.getDoses()), 2, 1);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getColestrol()/pratoDoc.getDoses()), 3, 1);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getHidratos()/pratoDoc.getDoses()), 4, 1);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getFibra()/pratoDoc.getDoses()), 5, 1);
+            
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getEnergia()), 0, 2);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getProteina()), 1, 2);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getLipidos()), 2, 2);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getColestrol()), 3, 2);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getHidratos()), 4, 2);
+            tabelaNutricional.setValueAt(df.format(pratoInfo.getFibra()), 5, 2);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -95,15 +105,15 @@ public class TabelaNutricional extends javax.swing.JFrame {
 
         tabelaNutricional.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Energia (kcal)", null},
-                {"Proteinas (g)", null},
-                {"Lipidos (g)", null},
-                {"Colestrol (mg)", null},
-                {"Hidratos de Caborno (g)", null},
-                {"Fibra Alimentar (g)", null}
+                {"Energia (kcal)", null, null},
+                {"Proteinas (g)", null, null},
+                {"Lipidos (g)", null, null},
+                {"Colestrol (mg)", null, null},
+                {"Hidratos de Caborno (g)", null, null},
+                {"Fibra Alimentar (g)", null, null}
             },
             new String [] {
-                "Propriedades", "Para N Doses"
+                "Propriedades", "Para 1 Dose", "Para N Doses"
             }
         ));
         jScrollPane1.setViewportView(tabelaNutricional);
@@ -113,16 +123,17 @@ public class TabelaNutricional extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dosesPrato)
-                    .addComponent(cozinhaPrato)
-                    .addComponent(nomeDoPrato))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(65, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dosesPrato)
+                            .addComponent(cozinhaPrato)
+                            .addComponent(nomeDoPrato)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,9 +144,9 @@ public class TabelaNutricional extends javax.swing.JFrame {
                 .addComponent(cozinhaPrato)
                 .addGap(18, 18, 18)
                 .addComponent(dosesPrato)
-                .addGap(18, 18, 18)
+                .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         pack();
