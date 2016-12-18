@@ -359,17 +359,20 @@ public class PratoEdit extends javax.swing.JFrame {
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
         enableInputs();
+        tabelaNutricionalBTN.setVisible(false);
         setTitle("Editar Prato");
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
         disableInputs();
+        tabelaNutricionalBTN.setVisible(true);
         fillInputs();
         setTitle("Detalhes do Prato");
     }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
         disableInputs();
+        tabelaNutricionalBTN.setVisible(true);
         try {
             Prato pratoDocUpdate = new Prato(idPrato, cozinhaInput.getSelectedItem().toString(), difInput.getSelectedItem().toString(), tempoInput.getSelectedItem().toString(), Integer.parseInt(dosesInput.getValue().toString()), preparacaoInput.getText());
             DocDB.updatePratoDoc(pratoDocUpdate);

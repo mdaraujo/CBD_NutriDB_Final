@@ -26,7 +26,7 @@ public class PratoCreate extends javax.swing.JFrame {
     public PratoCreate() {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle("Detalhes do Prato");
+        setTitle("Inserir Prato");
         this.setLocationRelativeTo(null);
         imgPath = "";
         preparacaoInput.setLineWrap(true);
