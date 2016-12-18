@@ -37,13 +37,6 @@ public class IngredientesInsert extends javax.swing.JFrame {
         idSelectedInReceita = -1;
 
         fillReceitaList();
-        
-        //JUST TO DEBUG
-        try {
-            System.out.println(RelationalDB.getPratoNutriInfo(GraphDB.getListIngContidosEmPrato(idPrato)));
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 
     public IngredientesInsert() {

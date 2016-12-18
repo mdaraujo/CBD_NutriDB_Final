@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.swing.DefaultListModel;
 
 /**
@@ -49,16 +50,26 @@ public class RelationalDB {
     public static PratoNutriInfo getPratoNutriInfo(List<Ingrediente> ingredientes) throws SQLException {
         PratoNutriInfo pratoInfo = new PratoNutriInfo();
 
+        Random random = new Random();
         for (Ingrediente ing : ingredientes) {
             Alimento alimento = getAlimento(ing.getId());
-            int gramas = getGramasByUnidade(ing.getUnidade());
-
-            pratoInfo.addEnergia(alimento.getEnergia() * gramas / 100);
-            pratoInfo.addProteina(alimento.getProteina() * gramas / 100);
-            pratoInfo.addLipidos(alimento.getLipidos()* gramas / 100);
-            pratoInfo.addColestrol(alimento.getColestrol()* gramas / 100);
-            pratoInfo.addHidratos(alimento.getHidratos()* gramas / 100);
-            pratoInfo.addFibra(alimento.getFibra()* gramas / 100);
+            float gramas;
+            if (ing.getUnidade().equals("q.b")) { // depende do gosto de cada utilizador, portanto deduzimos uma aproximaçao 
+                gramas = random.nextFloat() * 5;
+                //System.out.println(alimento.getNome() + " : q.b : " + gramas);
+            } else if (ing.getUnidade().equals("unidades")) { // nao temos informaçao de quantas gramas pesa o alimento, por isso estamos a usar um valor irreal, mas que depende de cada alimento
+                gramas = alimento.getEnergia() / 6;
+                //System.out.println(alimento.getNome() + " : unidades : " + gramas);
+            } else {
+                gramas = (float) (getGramasByUnidade(ing.getUnidade()) * ing.getQuantidade() / 100);
+            }
+            
+            pratoInfo.addEnergia((int) (alimento.getEnergia() * gramas));
+            pratoInfo.addProteina(alimento.getProteina() * gramas);
+            pratoInfo.addLipidos(alimento.getLipidos() * gramas);
+            pratoInfo.addColestrol((int) (alimento.getColestrol() * gramas));
+            pratoInfo.addHidratos(alimento.getHidratos() * gramas);
+            pratoInfo.addFibra(alimento.getFibra() * gramas);
         }
         return pratoInfo;
     }

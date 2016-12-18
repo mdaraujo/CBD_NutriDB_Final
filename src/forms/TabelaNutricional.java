@@ -13,8 +13,6 @@ import entities.Prato;
 import entities.PratoNutriInfo;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -68,7 +66,7 @@ public class TabelaNutricional extends javax.swing.JFrame {
             tabelaNutricional.setValueAt(pratoInfo.getHidratos(), 4, 1);
             tabelaNutricional.setValueAt(pratoInfo.getFibra(), 5, 1);
         } catch (SQLException ex) {
-            Logger.getLogger(TabelaNutricional.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
     }
 
